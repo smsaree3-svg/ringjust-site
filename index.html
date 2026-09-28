@@ -49,7 +49,8 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{overflow-x:clip}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
 img{max-width:100%;height:auto;display:block}
 a{color:inherit}
@@ -315,6 +316,111 @@ footer a:hover{color:var(--ink)}
   details{padding:16px 18px}
 }
 @media (prefers-reduced-motion: reduce){.card,.step,.use,.switch button,.row,.float{transition:none}.card:hover{transform:none}}
+
+/* ===== premium layer ===== */
+.hero{background:#06101F;color:#EAF1FA;padding-block:70px 0;isolation:isolate}
+.hero::before{inset:0;height:auto;background:radial-gradient(60% 55% at 50% 0%,rgba(20,121,240,.35),transparent 70%),radial-gradient(40% 40% at 85% 30%,rgba(47,207,127,.18),transparent 70%),radial-gradient(35% 35% at 10% 40%,rgba(18,181,214,.18),transparent 70%)}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:56px 56px;-webkit-mask-image:radial-gradient(70% 60% at 50% 20%,#000 30%,transparent 80%);mask-image:radial-gradient(70% 60% at 50% 20%,#000 30%,transparent 80%)}
+.rings{position:absolute;left:50%;top:230px;width:0;height:0;z-index:-1;pointer-events:none}
+.rings i{position:absolute;left:0;top:0;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;border:1px solid rgba(47,207,127,.35);opacity:0;animation:pulse 6s ease-out infinite}
+.rings i:nth-child(2){animation-delay:1.5s;border-color:rgba(18,181,214,.35)}.rings i:nth-child(3){animation-delay:3s;border-color:rgba(20,121,240,.35)}.rings i:nth-child(4){animation-delay:4.5s}
+@keyframes pulse{0%{transform:scale(.2);opacity:.9}100%{transform:scale(2.4);opacity:0}}
+.hero .pill{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.14);color:#EAF1FA;box-shadow:none}
+.hero h1{color:#fff}
+.hero .lede{color:#B7C6DB}
+.hero .trust{color:#B7C6DB}
+.hero .btn.ghost{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.2);color:#fff}
+.hero .switch .lbl{color:#9DB0C9}
+.hero .switch button{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.16);color:#EAF1FA}
+.hero .switch button[aria-selected="true"]{background:#fff;color:#0F2748;border-color:#fff}
+.stage{perspective:1600px;z-index:2}
+.hero{padding-bottom:90px}
+.win,.float{color:var(--ink)}
+.stage .win{transform-origin:50% 0;transform:rotateX(var(--tilt,14deg)) scale(var(--sc,.96));transition:transform .08s linear;box-shadow:0 60px 120px -40px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.06)}
+.after-hero{display:none}
+.btn.primary{position:relative;overflow:hidden}
+.btn.primary::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);transform:translateX(-120%);transition:transform .6s ease}
+.btn.primary:hover::after{transform:translateX(120%)}
+/* marquee */
+.marq{overflow:hidden;padding-block:28px 8px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.marq p{text-align:center;color:var(--muted);font-weight:700;font-size:.9rem;margin-bottom:16px}
+.track{display:flex;gap:12px;width:max-content;animation:mq 38s linear infinite}
+.marq:hover .track{animation-play-state:paused}
+.track span{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;background:var(--soft);border:1px solid var(--line);font-weight:700;font-size:.95rem;white-space:nowrap}
+@keyframes mq{to{transform:translateX(-50%)}}
+/* story */
+.story{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+.steps3{display:flex;flex-direction:column}
+.st3{min-height:62vh;display:flex;flex-direction:column;justify-content:center;gap:12px;opacity:.35;transition:opacity .35s ease}
+.st3.on{opacity:1}
+.st3 .k{font-family:var(--mono);font-size:.78rem;color:var(--blue);letter-spacing:.08em}
+.st3 h3{font-size:clamp(1.5rem,2.6vw,2.1rem);font-weight:700;letter-spacing:-0.03em}
+.st3 p{color:var(--muted);font-size:1.05rem;max-width:44ch}
+.phonewrap{position:sticky;top:110px;display:grid;place-items:center;height:calc(100vh - 140px);max-height:720px}
+.phone{position:relative;width:300px;height:600px;border-radius:46px;background:#0B1628;padding:12px;box-shadow:0 50px 100px -40px rgba(15,39,72,.6),inset 0 0 0 2px #22324C}
+.phone::before{content:"";position:absolute;top:18px;left:50%;width:90px;height:24px;margin-left:-45px;border-radius:14px;background:#000;z-index:3}
+.glow{position:absolute;width:420px;height:420px;border-radius:50%;background:var(--grad);filter:blur(80px);opacity:.25;z-index:-1}
+.screen{position:absolute;inset:12px;border-radius:36px;overflow:hidden;background:#0F2748;color:#EAF1FA;padding:62px 20px 24px;display:flex;flex-direction:column;gap:14px;opacity:0;transform:scale(.97);transition:opacity .4s ease,transform .4s ease}
+.screen.on{opacity:1;transform:none}
+.screen.light{background:#F3F7FC;color:#0F2748}
+.screen .cap{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:#7FD4F0;text-align:center}
+.screen.light .cap{color:#1479F0}
+.bigav{width:96px;height:96px;border-radius:50%;margin:10px auto 0;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:2rem;color:#fff;background:var(--grad);position:relative}
+.bigav::after,.bigav::before{content:"";position:absolute;inset:-12px;border-radius:50%;border:2px solid rgba(47,207,127,.6);animation:ring2 1.8s ease-out infinite}
+.bigav::before{animation-delay:.9s}
+@keyframes ring2{0%{transform:scale(.8);opacity:1}100%{transform:scale(1.5);opacity:0}}
+.screen h4{margin:0;font-family:var(--display);font-size:1.35rem;text-align:center}
+.screen .sub{text-align:center;color:#9DB0C9;font-size:.9rem}
+.screen.light .sub{color:#5B6B82}
+.acc{margin-top:auto;display:flex;justify-content:space-around}
+.acc span{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;color:#fff}
+.acc .no{background:#E5484D}.acc .yes{background:#2FCF7F}
+.sms{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.sms .b{max-width:82%;padding:9px 12px;border-radius:16px;font-size:.86rem;background:#fff;border:1px solid #E1E8F1}
+.sms .b.me{align-self:flex-end;background:#1479F0;color:#fff;border:0}
+.sms .auto{font-size:.7rem;color:#5B6B82;align-self:flex-end;font-family:var(--mono)}
+.sumcard{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px;font-size:.88rem;display:grid;gap:8px}
+.sumcard b{font-family:var(--mono);font-size:.7rem;color:#7FD4F0;letter-spacing:.08em}
+.sumcard li{margin-left:16px}
+.sumcard ul{margin:0;padding:0}
+.tlist{display:grid;gap:10px}
+.tlist div{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid #E1E8F1;border-radius:14px;padding:10px 12px;font-size:.84rem}
+.tlist i{width:10px;height:10px;border-radius:50%;margin-top:5px;flex:none}
+.tlist small{display:block;color:#5B6B82}
+.big-wave{display:flex;align-items:center;gap:3px;height:70px}
+.big-wave span{flex:1;border-radius:3px;background:linear-gradient(180deg,#12B5D6,#2FCF7F);animation:w 1.1s ease-in-out infinite}
+@media (max-width:900px){
+  .story{grid-template-columns:1fr;gap:0}
+  .phonewrap{top:76px;height:auto;padding-block:10px;z-index:2;background:linear-gradient(var(--bg) 85%,transparent)}
+  .phone{width:210px;height:300px;border-radius:32px;padding:8px}
+  .phone::before{top:12px;width:64px;height:18px;margin-left:-32px}
+  .screen{inset:8px;border-radius:26px;padding:40px 12px 12px;gap:8px;font-size:.85rem}
+  .bigav{width:60px;height:60px;font-size:1.3rem}
+  .acc span{width:44px;height:44px}
+  .screen h4{font-size:1.05rem}
+  .st3{min-height:48vh}
+  .hero{padding-bottom:56px}
+}
+/* compare */
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.cmp .col{border-radius:24px;padding:30px}
+.cmp .old{background:var(--soft);border:1px solid var(--line)}
+.cmp .new{background:var(--panel);color:var(--panel-ink);position:relative;overflow:hidden}
+.cmp .new::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 60% at 100% 0%,rgba(47,207,127,.25),transparent 70%)}
+.cmp .new>*{position:relative}
+.cmp .k{font-family:var(--mono);font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:16px}
+.cmp .new .k{color:#7FD4F0}
+.cmp ul{margin:0;padding:0;list-style:none;display:grid;gap:14px;font-size:1.02rem}
+.cmp li{display:flex;gap:12px;align-items:flex-start}
+.cmp .old li{color:var(--muted)}
+.cmp .old li::before{content:"\2715";color:#E5484D;font-weight:700}
+.cmp .new li::before{content:"\2713";color:#5FE3A1;font-weight:700}
+@media (max-width:760px){.cmp{grid-template-columns:1fr}}
+/* spotlight */
+.card::after,.use::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(320px circle at var(--mx,50%) var(--my,50%),rgba(20,121,240,.10),transparent 60%);opacity:0;transition:opacity .25s}
+.card:hover::after,.use:hover::after{opacity:1}
+.use{position:relative}
+@media (prefers-reduced-motion: reduce){.rings i,.track,.bigav::after,.bigav::before,.big-wave span{animation:none}.stage .win{transform:none}}
 </style>
 </head>
 <body>
@@ -324,8 +430,8 @@ footer a:hover{color:var(--ink)}
     <a class="brand" href="#main" aria-label="RingJust home"><img src="assets/icon.png" alt="" width="38" height="38"><span>Ring<span class="g">Just</span></span></a>
     <nav class="nav" aria-label="Main">
       <a href="#features">Features</a>
+      <a href="#story">How it works</a>
       <a href="#uses">Who it's for</a>
-      <a href="#how">How it works</a>
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
     </nav>
@@ -344,6 +450,7 @@ footer a:hover{color:var(--ink)}
 
 <main id="main">
   <section class="hero">
+    <div class="rings" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     <div class="wrap">
       <span class="pill"><b>New</b>AI call summaries on every recorded call</span>
       <h1>Every call, text and customer.<br><span class="g">All in RingJust.</span></h1>
@@ -403,10 +510,39 @@ footer a:hover{color:var(--ink)}
     </div>
   </section>
 
-  <div class="who-for wrap">
-    <p>Built for teams that live on the phone</p>
-    <div class="chips"><span>Sales teams</span><span>Customer support</span><span>Real estate</span><span>Clinics and dental</span><span>Home services</span><span>Agencies</span><span>E-commerce</span><span>Logistics</span><span>Startups</span></div>
+  <div class="after-hero" aria-hidden="true"></div>
+  <div class="marq" aria-label="Industries">
+    <p>Built for every team that lives on the phone</p>
+    <div class="track"><span>Sales teams</span><span>Customer support</span><span>Real estate</span><span>Clinics and dental</span><span>Home services</span><span>Agencies</span><span>E-commerce</span><span>Logistics</span><span>Startups</span><span>Law firms</span><span>Insurance</span><span>Recruiting</span><span>Education</span><span>Hospitality</span><span aria-hidden="true">Sales teams</span><span aria-hidden="true">Customer support</span><span aria-hidden="true">Real estate</span><span aria-hidden="true">Clinics and dental</span><span aria-hidden="true">Home services</span><span aria-hidden="true">Agencies</span><span aria-hidden="true">E-commerce</span><span aria-hidden="true">Logistics</span><span aria-hidden="true">Startups</span><span aria-hidden="true">Law firms</span><span aria-hidden="true">Insurance</span><span aria-hidden="true">Recruiting</span><span aria-hidden="true">Education</span><span aria-hidden="true">Hospitality</span></div>
   </div>
+
+  <section id="story">
+    <div class="wrap">
+      <div class="head c">
+        <span class="eyebrow">A call, start to finish</span>
+        <h2>Watch one customer call <span class="g">run itself</span></h2>
+        <p class="lede">Scroll through what happens when a customer rings your RingJust number.</p>
+      </div>
+      <div class="story">
+        <div class="phonewrap"><span class="glow" aria-hidden="true"></span>
+          <div class="phone" aria-hidden="true">
+            <div class="screen on" data-i="0"><span class="cap">INCOMING CALL · YOUR LOCAL NUMBER</span><div class="bigav">SM</div><h4>Sarah Miller</h4><p class="sub">+1 (312) 555-0164<br>Returning customer</p><div class="acc"><span class="no"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg></span><span class="yes"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg></span></div></div>
+            <div class="screen" data-i="1"><span class="cap">ON CALL · 02:14</span><div class="bigav" style="animation:none">SM</div><h4>Sarah Miller</h4><div class="big-wave" id="bw"></div><p class="sub">Answered from a laptop in the browser</p></div>
+            <div class="screen light" data-i="2"><span class="cap">MISSED CALL · AUTO TEXT SENT</span><div class="sms"><span class="b me">Sorry we missed you! We will call you back within 10 minutes.</span><span class="auto">Sent automatically</span><span class="b">Thanks, I need to move my Thursday booking</span><span class="b me">No problem, calling you now.</span></div></div>
+            <div class="screen" data-i="3"><span class="cap">AI SUMMARY · READY</span><div class="sumcard"><b>WHAT HAPPENED</b><ul><li>Moved booking to Friday, 3 PM</li><li>Asked about weekend hours</li></ul><b>NEXT STEP</b><ul><li>Send confirmation text</li></ul></div><p class="sub" style="margin-top:auto">Recorded, transcribed and summarised</p></div>
+            <div class="screen light" data-i="4"><span class="cap">CONTACT · SARAH MILLER</span><div class="tlist"><div><i style="background:#2FCF7F"></i><span>Call, 4 min<small>AI summary attached</small></span></div><div><i style="background:#1479F0"></i><span>Text sent<small>Confirmation for Friday 3 PM</small></span></div><div><i style="background:#F59E0B"></i><span>Missed call<small>Auto text went out</small></span></div><div><i style="background:#8B5CF6"></i><span>Note<small>Prefers afternoons</small></span></div></div></div>
+          </div>
+        </div>
+        <div class="steps3">
+          <div class="st3 on" data-i="0"><span class="k">01 · RING</span><h3>A customer calls your local number</h3><p>Your number rings on every teammate's browser, or follows your IVR menu to the right person.</p></div>
+          <div class="st3" data-i="1"><span class="k">02 · ANSWER</span><h3>Answer from any laptop, anywhere</h3><p>Crystal-clear calls in the browser. Mute, hold or warm-transfer to a colleague in one click.</p></div>
+          <div class="st3" data-i="2"><span class="k">03 · NEVER MISS</span><h3>Missed it? A text goes out for you</h3><p>Customers get an instant reply, and the conversation continues by SMS from the same number.</p></div>
+          <div class="st3" data-i="3"><span class="k">04 · SUMMARISE</span><h3>AI writes the notes</h3><p>Every recorded call is transcribed and summarised with next steps, so nobody has to type a thing.</p></div>
+          <div class="st3" data-i="4"><span class="k">05 · REMEMBER</span><h3>Everything lands on the customer's record</h3><p>Calls, texts, notes and recordings in one timeline in the built-in CRM, ready for the next conversation.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section id="features">
     <div class="wrap">
@@ -474,6 +610,16 @@ footer a:hover{color:var(--ink)}
         <div class="step rv"><span class="n">1</span><h3>Pick your number</h3><p>Choose a local number by area code, or bring the number you already have.</p></div>
         <div class="step rv"><span class="n">2</span><h3>Invite your team</h3><p>Add a seat for each person. They sign in from any browser, nothing to install.</p></div>
         <div class="step rv"><span class="n">3</span><h3>Start ringing</h3><p>Call, text and let RingJust log every conversation for you.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="compare" style="padding-top:0">
+    <div class="wrap">
+      <div class="head c"><span class="eyebrow">Why switch</span><h2>The old phone system vs <span class="g">RingJust</span></h2></div>
+      <div class="cmp">
+        <div class="col old rv"><span class="k">Old phone system</span><ul><li>Desk phones, wiring and a technician visit</li><li>Texts on personal mobiles, lost when people leave</li><li>Notes typed by hand after every call</li><li>Weeks to set up, contracts to sign</li><li>Recording, IVR and CRM sold as add-ons</li></ul></div>
+        <div class="col new rv"><span class="k">RingJust</span><ul><li>Works in the browser on any laptop</li><li>Calls and texts in one shared inbox</li><li>AI writes the summary for you</li><li>Live in minutes, no long contract</li><li>Recording, IVR and CRM included</li></ul></div>
       </div>
     </div>
   </section>
@@ -603,6 +749,18 @@ footer a:hover{color:var(--ink)}
   var prog=document.getElementById("prog"), mbar=document.getElementById("mbar"), heroEnd=document.querySelector(".stage");
   function onS(){ var h=document.documentElement.scrollHeight-window.innerHeight; if(prog) prog.style.width=(h>0?(window.scrollY/h*100):0)+"%"; if(mbar&&heroEnd){ var st=document.getElementById("start"); var nearEnd=st&&st.getBoundingClientRect().top<window.innerHeight; mbar.classList.toggle("show", window.scrollY>heroEnd.offsetTop && !nearEnd); } }
   window.addEventListener("scroll",onS,{passive:true}); onS();
+  // tilt the hero app as you scroll
+  var win=document.querySelector(".stage .win"), stageEl=document.querySelector(".stage");
+  function tilt(){ if(!win||reduce) return; var r=stageEl.getBoundingClientRect(); var p=Math.min(1,Math.max(0,1-(r.top-80)/(window.innerHeight*0.7))); win.style.setProperty("--tilt",(14*(1-p)).toFixed(2)+"deg"); win.style.setProperty("--sc",(0.96+0.04*p).toFixed(3)); }
+  window.addEventListener("scroll",tilt,{passive:true}); tilt();
+  if(window.innerWidth<900 && win){ win.style.setProperty("--tilt","0deg"); win.style.setProperty("--sc","1"); }
+  // story
+  var bw=document.getElementById("bw"); if(bw){ for(var i=0;i<30;i++){ var sp=document.createElement("span"); sp.style.height=(30+Math.round(Math.abs(Math.sin(i*1.3))*70))+"%"; sp.style.animationDelay=(-(i%7)*.15)+"s"; bw.appendChild(sp);} }
+  var st3=document.querySelectorAll(".st3"), scr=document.querySelectorAll(".screen");
+  function setStep(n){ st3.forEach(function(e){ e.classList.toggle("on", e.getAttribute("data-i")===n); }); scr.forEach(function(e){ e.classList.toggle("on", e.getAttribute("data-i")===n); }); }
+  if("IntersectionObserver" in window){ var so=new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting) setStep(en.target.getAttribute("data-i")); }); },{rootMargin:"-45% 0px -45% 0px"}); st3.forEach(function(e){ so.observe(e); }); }
+  // spotlight
+  document.querySelectorAll(".card,.use").forEach(function(c){ c.addEventListener("pointermove",function(e){ var r=c.getBoundingClientRect(); c.style.setProperty("--mx",(e.clientX-r.left)+"px"); c.style.setProperty("--my",(e.clientY-r.top)+"px"); }); });
   var y=document.getElementById("yr"); if(y) y.textContent=new Date().getFullYear();
 })();
 </script>
