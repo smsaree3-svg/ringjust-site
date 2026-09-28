@@ -263,9 +263,62 @@ footer a:hover{color:var(--ink)}
 .js .rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
 .js .rv.in{opacity:1;transform:none}
 @media (prefers-reduced-motion: reduce){.js .rv{opacity:1;transform:none}}
+
+/* interactivity */
+.prog{position:fixed;top:0;left:0;height:3px;width:0;background:var(--grad);z-index:40;transition:width .1s linear}
+.switch{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:44px}
+.switch .lbl{align-self:center;font-weight:700;color:var(--muted);font-size:.9rem;margin-right:4px}
+.switch button{font:inherit;font-weight:700;font-size:.9rem;padding:10px 16px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:background .15s,color .15s,border-color .15s,transform .15s}
+.switch button:hover{transform:translateY(-1px);border-color:var(--blue)}
+.switch button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.switch button span{font-size:1rem}
+.stage{margin-top:22px}
+.row,.call .who,.call .ai,.float{transition:opacity .25s ease,transform .25s ease}
+.swap{opacity:0;transform:translateY(6px)}
+.card{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.card:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--blue) 40%,var(--line));box-shadow:0 24px 50px -30px rgba(20,121,240,.55)}
+.step,.use{transition:transform .2s ease,border-color .2s ease}
+.step:hover,.use:hover{transform:translateY(-3px);border-color:var(--blue)}
+/* live dialer */
+.dialer{display:flex;flex-direction:column;gap:10px;max-width:250px}
+.dialer .scr{min-height:54px;border-radius:12px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;padding:6px 12px;font-family:var(--mono);font-size:1rem;overflow:hidden;white-space:nowrap}
+.dialer .scr em{font-style:normal;font-size:.72rem;line-height:1.2;color:var(--muted);font-family:var(--body);font-weight:700}
+.dialer .scr em.on{color:#149356}
+.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.keys button{font:inherit;font-family:var(--display);font-weight:600;height:40px;border-radius:12px;background:var(--surface);border:1px solid var(--line);color:var(--ink);cursor:pointer;transition:transform .08s,background .15s}
+.keys button:hover{background:var(--blue-soft)}
+.keys button:active{transform:scale(.94)}
+.dialer .go{font:inherit;font-weight:700;height:44px;border:0;border-radius:12px;background:var(--grad);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.dialer .go.end{background:#E5484D}
+.dialer .go:disabled{opacity:.5;cursor:not-allowed}
+.hint{font-size:.78rem;color:var(--muted)}
+/* ivr demo */
+.ivr button{font:inherit;text-align:left;display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:9px 12px;color:var(--ink);cursor:pointer;width:100%;transition:border-color .15s,background .15s}
+.ivr button:hover{border-color:var(--blue)}
+.ivr button.sel{background:var(--blue-soft);border-color:var(--blue)}
+.ivr .res{font-size:.85rem;font-weight:700;color:var(--blue);min-height:1.4em;display:flex;align-items:center;gap:8px}
+.ivr .res .dot{width:8px;height:8px}
+/* mobile bar */
+.mbar{display:none}
+@media (max-width:700px){
+  .mbar{display:flex;gap:10px;position:fixed;left:0;right:0;bottom:0;z-index:35;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(12px);border-top:1px solid var(--line);transform:translateY(110%);transition:transform .25s ease}
+  .mbar.show{transform:none}
+  .mbar a{flex:1;padding:13px 10px}
+  footer{padding-bottom:90px}
+  .switch{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 8px;margin-inline:-18px;padding-inline:18px;scrollbar-width:none}
+  .switch::-webkit-scrollbar{display:none}
+  .switch button{flex:none;scroll-snap-align:start}
+  .switch .lbl{display:none}
+  .hero{padding-top:36px}
+  .card:hover,.step:hover,.use:hover{transform:none}
+  .keys button{height:46px}
+  details{padding:16px 18px}
+}
+@media (prefers-reduced-motion: reduce){.card,.step,.use,.switch button,.row,.float{transition:none}.card:hover{transform:none}}
 </style>
 </head>
 <body>
+<div class="prog" id="prog" aria-hidden="true"></div>
 <header class="top">
   <div class="wrap">
     <a class="brand" href="#main" aria-label="RingJust home"><img src="assets/icon.png" alt="" width="38" height="38"><span>Ring<span class="g">Just</span></span></a>
@@ -305,7 +358,15 @@ footer a:hover{color:var(--ink)}
         <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>US and Canada numbers</span>
       </div>
 
-      <div class="stage rv" aria-label="Example of the RingJust app">
+      <div class="switch" role="tablist" aria-label="See RingJust for your business">
+        <span class="lbl">See it for:</span>
+        <button type="button" role="tab" aria-selected="true" data-k="clinic"><span aria-hidden="true">🦷</span>Clinics</button>
+        <button type="button" role="tab" aria-selected="false" data-k="realty"><span aria-hidden="true">🏡</span>Real estate</button>
+        <button type="button" role="tab" aria-selected="false" data-k="sales"><span aria-hidden="true">📈</span>Sales</button>
+        <button type="button" role="tab" aria-selected="false" data-k="support"><span aria-hidden="true">🎧</span>Support</button>
+        <button type="button" role="tab" aria-selected="false" data-k="home"><span aria-hidden="true">🔧</span>Home services</button>
+      </div>
+      <div class="stage rv" aria-label="Example of the RingJust app" aria-live="polite">
         <div class="win">
           <div class="bar"><i></i><i></i><i></i><span class="url">app.ringjust.com</span></div>
           <div class="app">
@@ -318,24 +379,26 @@ footer a:hover{color:var(--ink)}
             </aside>
             <div class="main">
               <div class="mh"><b>Today</b><span class="srch">Search calls</span></div>
+              <div id="rows">
               <div class="row"><span class="av" style="background:#1479F0">SM</span><div>Sarah Miller<small>Acme Dental</small></div><span class="st in">Answered</span><span class="d">4:12</span></div>
               <div class="row"><span class="av" style="background:#12B5D6">JP</span><div>James Park<small>Park Realty</small></div><span class="st out">Outgoing</span><span class="d">2:48</span></div>
               <div class="row"><span class="av" style="background:#E5484D">+1</span><div>(415) 555-0137<small>New caller</small></div><span class="st miss">Missed</span><span class="d">0:00</span></div>
               <div class="row"><span class="av" style="background:#8B5CF6">LN</span><div>Lena Novak<small>Brightline Studio</small></div><span class="st vm">Voicemail</span><span class="d">0:36</span></div>
               <div class="row"><span class="av" style="background:#2FCF7F">DR</span><div>Diego Ruiz<small>Ruiz Plumbing</small></div><span class="st in">Answered</span><span class="d">6:05</span></div>
+              </div>
             </div>
             <div class="call">
               <div class="lb"><span class="live"><span class="dot" aria-hidden="true"></span>On call</span><span id="timer">03:21</span></div>
-              <div class="who"><span class="av" style="background:#1479F0">SM</span><div><b>Sarah Miller</b><small>+1 (312) 555-0164</small></div></div>
+              <div class="who" id="cwho"><span class="av" style="background:#1479F0">SM</span><div><b>Sarah Miller</b><small>+1 (312) 555-0164</small></div></div>
               <div class="wave" aria-hidden="true"></div>
-              <div class="ai"><b>AI NOTES, LIVE</b>Wants to move her appointment to Thursday. Asked about weekend hours.</div>
+              <div class="ai" id="cai"><b>AI NOTES, LIVE</b><span>Wants to move her appointment to Thursday. Asked about weekend hours.</span></div>
               <div class="cbtn"><span>Mute</span><span>Hold</span><span>Transfer</span><span class="end">End</span></div>
             </div>
           </div>
         </div>
-        <div class="float f1"><span class="fi" style="background:#2FCF7F"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><b>Call logged</b><small>Saved to Sarah's contact</small></div></div>
-        <div class="float f2"><span class="fi" style="background:#1479F0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg></span><div><b>New text</b><small>"Running 5 min late"</small></div></div>
-        <div class="float f3"><span class="fi" style="background:#12B5D6"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v18M3 12h18"/></svg></span><div><b>AI summary ready</b><small>Call with James Park</small></div></div>
+        <div class="float f1"><span class="fi" style="background:#2FCF7F"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><b>Call logged</b><small id="fl1">Saved to Sarah's contact</small></div></div>
+        <div class="float f2"><span class="fi" style="background:#1479F0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg></span><div><b>New text</b><small id="fl2">"Running 5 min late"</small></div></div>
+        <div class="float f3"><span class="fi" style="background:#12B5D6"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v18M3 12h18"/></svg></span><div><b>AI summary ready</b><small id="fl3">Call with James Park</small></div></div>
       </div>
     </div>
   </section>
@@ -353,16 +416,21 @@ footer a:hover{color:var(--ink)}
         <p class="lede">Calling, texting, recording and a CRM, all on one login. No add-ons to buy, no desk phones to install.</p>
       </div>
       <div class="bento">
-        <div class="card c2 rv"><h3>Call from anywhere</h3><p>Click to call from your browser, on any laptop, at the office or at home.</p>
-          <div class="vis"><div class="pad" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span class="go">Call</span></div></div></div>
+        <div class="card c2 rv"><h3>Call from anywhere <span style="font-size:.72rem;font-family:var(--mono);color:var(--blue);vertical-align:middle">TRY IT</span></h3><p>Click to call from your browser, on any laptop, at the office or at home.</p>
+          <div class="vis"><div class="dialer" id="dialer">
+            <div class="scr"><span id="dnum">+1 </span><em id="dstat">Try it</em></div>
+            <div class="keys"><button type="button" data-d="1" aria-label="Dial 1">1</button><button type="button" data-d="2" aria-label="Dial 2">2</button><button type="button" data-d="3" aria-label="Dial 3">3</button><button type="button" data-d="4" aria-label="Dial 4">4</button><button type="button" data-d="5" aria-label="Dial 5">5</button><button type="button" data-d="6" aria-label="Dial 6">6</button><button type="button" data-d="7" aria-label="Dial 7">7</button><button type="button" data-d="8" aria-label="Dial 8">8</button><button type="button" data-d="9" aria-label="Dial 9">9</button><button type="button" data-d="*" aria-label="Dial *">*</button><button type="button" data-d="0" aria-label="Dial 0">0</button><button type="button" data-d="#" aria-label="Dial #">#</button></div>
+            <button type="button" class="go" id="dgo"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg><span>Call</span></button>
+            <span class="hint">A demo. Tap the keys, no real call is made.</span>
+          </div></div></div>
         <div class="card c2 rv"><h3>Local business numbers</h3><p>Pick numbers by area code in the US and Canada. Customers pick up local calls.</p>
           <div class="vis nums" aria-hidden="true"><div>+1 (312) 555-0164<em>Chicago</em></div><div>+1 (415) 555-0198<em>San Francisco</em></div><div>+1 (416) 555-0122<em>Toronto</em></div></div></div>
         <div class="card c2 rv"><h3>Two-way SMS</h3><p>Text customers from the same number you call from, with every thread in one inbox.</p>
           <div class="vis chat" aria-hidden="true"><span class="bub l">Hi, is 3 PM still OK tomorrow?</span><span class="bub r">Yes, see you at 3!</span><span class="bub l">Perfect, thank you</span></div></div>
         <div class="card c3 rv"><h3>Recording, transcripts and AI summaries</h3><p>Every call can be recorded, transcribed and summarised automatically, so nobody has to take notes.</p>
           <div class="vis"><div class="rec" aria-hidden="true"><b>CALL WITH JAMES PARK · 2:48</b><div class="wave" id="w2"></div><p>Summary: Interested in 3 seats. Send pricing by Friday. Follow up next Tuesday.</p></div></div></div>
-        <div class="card c3 rv"><h3>IVR and smart routing</h3><p>Greet callers, route them to the right person and send after-hours calls to voicemail.</p>
-          <div class="vis ivr" aria-hidden="true"><div><kbd>1</kbd>Sales, rings the sales team</div><div><kbd>2</kbd>Support, rings whoever is free</div><div><kbd>0</kbd>After hours, goes to voicemail</div></div></div>
+        <div class="card c3 rv"><h3>IVR and smart routing <span style="font-size:.72rem;font-family:var(--mono);color:var(--blue);vertical-align:middle">TRY IT</span></h3><p>Greet callers, route them to the right person and send after-hours calls to voicemail.</p>
+          <div class="vis ivr" id="ivr"><button type="button" data-r="Ringing the sales team"><kbd>1</kbd>Sales, rings the sales team</button><button type="button" data-r="Ringing whoever is free in support"><kbd>2</kbd>Support, rings whoever is free</button><button type="button" data-r="Sending the caller to voicemail"><kbd>0</kbd>After hours, goes to voicemail</button><div class="res" id="ivrres" role="status">Press a key to hear where the call goes</div></div></div></div>
         <div class="card c2 rv"><h3>Built-in CRM</h3><p>Contacts, notes and full call history on every customer, with click-to-call.</p>
           <div class="vis" aria-hidden="true"><div class="contact"><div class="top2"><span class="av" style="background:#8B5CF6">LN</span><div><b>Lena Novak</b><div style="font-size:.8rem;color:var(--muted)">Brightline Studio</div></div></div><div class="tl"><div><i></i>Called, 4 min, today</div><div><i></i>Texted a quote, yesterday</div><div><i></i>Voicemail, Mon</div></div></div></div></div>
         <div class="card c2 rv"><h3>Power dialer</h3><p>Work through a call list automatically. More conversations, less dialing.</p>
@@ -458,6 +526,7 @@ footer a:hover{color:var(--ink)}
     </div>
   </section>
 </main>
+<div class="mbar" id="mbar"><a class="btn primary" href="#start">Get early access</a><a class="btn ghost" href="https://calendly.com/amitrodaindia/15min" target="_blank" rel="noopener">Book a demo</a></div>
 
 <footer>
   <div class="wrap">
@@ -481,6 +550,59 @@ footer a:hover{color:var(--ink)}
   var rv=document.querySelectorAll(".rv");
   if("IntersectionObserver" in window){ var io=new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target);} }); },{rootMargin:"0px 0px -8% 0px"}); rv.forEach(function(el){ if(el.getBoundingClientRect().top<window.innerHeight) el.classList.add("in"); else io.observe(el); }); } else { rv.forEach(function(el){ el.classList.add("in"); }); }
   var t=document.getElementById("timer"), s=201; if(t) setInterval(function(){ s++; var m=Math.floor(s/60), r=s%60; t.textContent=(m<10?"0":"")+m+":"+(r<10?"0":"")+r; },1000);
+  var D={
+    clinic:{rows:[["SM","#1479F0","Sarah Miller","Patient","in","Answered","4:12"],["DK","#12B5D6","Dr. Kapoor","Referral","out","Outgoing","2:10"],["+1","#E5484D","(415) 555-0137","New patient","miss","Missed","0:00"],["LN","#8B5CF6","Lena Novak","Patient","vm","Voicemail","0:36"],["TB","#2FCF7F","Tom Baker","Patient","in","Answered","3:05"]],
+      who:["SM","#1479F0","Sarah Miller","+1 (312) 555-0164"],note:"Wants to move her cleaning to Thursday. Asked about weekend hours.",f:["Saved to Sarah's record","“Running 5 min late”","Call with Dr. Kapoor"]},
+    realty:{rows:[["JP","#12B5D6","James Park","Buyer lead","in","Answered","5:40"],["MR","#1479F0","Maria Rossi","Seller","out","Outgoing","3:12"],["+1","#E5484D","(646) 555-0183","Zillow lead","miss","Missed","0:00"],["AC","#8B5CF6","Alex Chen","Buyer","vm","Voicemail","0:41"],["NB","#2FCF7F","Nina Brooks","Landlord","in","Answered","2:26"]],
+      who:["JP","#12B5D6","James Park","+1 (646) 555-0112"],note:"Pre-approved up to $650k. Wants 3 beds near good schools. Viewing Saturday 11 AM.",f:["Saved to James's lead","“Can we see it at 11?”","Showing with Maria Rossi"]},
+    sales:{rows:[["RG","#1479F0","Rachel Green","Northwind","out","Outgoing","7:02"],["OM","#12B5D6","Omar Malik","Contoso","in","Answered","4:18"],["+1","#E5484D","(212) 555-0144","Website lead","miss","Missed","0:00"],["KS","#8B5CF6","Kate Sims","Fabrikam","vm","Voicemail","0:29"],["BW","#2FCF7F","Ben White","Tailspin","out","Outgoing","3:47"]],
+      who:["RG","#1479F0","Rachel Green","+1 (415) 555-0171"],note:"Team of 12. Budget approved for Q4. Send proposal by Friday, follow up Tuesday.",f:["Deal updated to Proposal","“Send it over today”","Call with Omar Malik"]},
+    support:{rows:[["LH","#1479F0","Liam Hart","Order #4821","in","Answered","3:55"],["EW","#12B5D6","Emma Wong","Order #4799","in","Answered","2:31"],["+1","#E5484D","(312) 555-0109","New caller","miss","Missed","0:00"],["GP","#8B5CF6","Grace Patel","Order #4810","vm","Voicemail","0:52"],["FJ","#2FCF7F","Finn Jones","Order #4777","out","Outgoing","1:48"]],
+      who:["LH","#1479F0","Liam Hart","+1 (206) 555-0138"],note:"Parcel marked delivered but not received. Offered a replacement, shipping today.",f:["Ticket #4821 updated","“Thanks, that was quick!”","Call with Emma Wong"]},
+    home:{rows:[["DR","#2FCF7F","Diego Ruiz","Leaking pipe","in","Answered","6:05"],["HS","#1479F0","Hannah Scott","Quote follow-up","out","Outgoing","2:44"],["+1","#E5484D","(713) 555-0126","New job","miss","Missed","0:00"],["PL","#8B5CF6","Paul Lee","AC service","vm","Voicemail","0:33"],["CM","#12B5D6","Chloe Martin","Boiler repair","in","Answered","4:20"]],
+      who:["DR","#2FCF7F","Diego Ruiz","+1 (713) 555-0191"],note:"Kitchen sink leak, needs someone today. Booked for 2 PM, sent a text confirmation.",f:["Job added to schedule","“See you at 2 PM”","Call with Hannah Scott"]}
+  };
+  function esc(t){ return String(t).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  var rowsEl=document.getElementById("rows"), who=document.getElementById("cwho"), ai=document.getElementById("cai");
+  function show(k){
+    var d=D[k]; if(!d||!rowsEl) return;
+    var parts=[rowsEl,who,ai,document.querySelector(".f1"),document.querySelector(".f2"),document.querySelector(".f3")];
+    parts.forEach(function(p){ if(p) p.classList.add("swap"); });
+    setTimeout(function(){
+      rowsEl.innerHTML=d.rows.map(function(r){ return '<div class="row"><span class="av" style="background:'+r[1]+'">'+esc(r[0])+'</span><div>'+esc(r[2])+'<small>'+esc(r[3])+'</small></div><span class="st '+r[4]+'">'+esc(r[5])+'</span><span class="d">'+esc(r[6])+'</span></div>'; }).join("");
+      who.innerHTML='<span class="av" style="background:'+d.who[1]+'">'+esc(d.who[0])+'</span><div><b>'+esc(d.who[2])+'</b><small>'+esc(d.who[3])+'</small></div>';
+      ai.querySelector("span").textContent=d.note;
+      ["fl1","fl2","fl3"].forEach(function(id,i){ var e=document.getElementById(id); if(e) e.textContent=d.f[i]; });
+      parts.forEach(function(p){ if(p) p.classList.remove("swap"); });
+    },220);
+  }
+  show("clinic");
+  var sw=document.querySelectorAll(".switch button"), auto=true, idx=0, keys=["clinic","realty","sales","support","home"];
+  function pick(btn){ sw.forEach(function(b){ b.setAttribute("aria-selected", b===btn?"true":"false"); }); show(btn.getAttribute("data-k")); }
+  sw.forEach(function(b){ b.addEventListener("click",function(){ auto=false; pick(b); }); });
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(!reduce) setInterval(function(){ if(!auto||document.hidden) return; idx=(idx+1)%keys.length; pick(document.querySelector('.switch button[data-k="'+keys[idx]+'"]')); },6000);
+  // dialer
+  var dn=document.getElementById("dnum"), ds=document.getElementById("dstat"), dg=document.getElementById("dgo"), digits="", state="idle", tmr=null, secs=0;
+  function fmt(x){ var a=x.slice(0,3),b=x.slice(3,6),c=x.slice(6,10); var o="+1 "; if(a) o+="("+a+(a.length===3?")":""); if(b) o+=" "+b; if(c) o+="-"+c; return o; }
+  function paint(){ if(!dn) return; dn.textContent=fmt(digits); }
+  document.querySelectorAll(".keys button").forEach(function(k){ k.addEventListener("click",function(){ if(state!=="idle") return; var v=k.getAttribute("data-d"); if(/\d/.test(v) && digits.length<10){ digits+=v; paint(); } }); });
+  if(dg) dg.addEventListener("click",function(){
+    if(state==="idle"){
+      if(digits.length<3){ ds.textContent="Type a number"; ds.className=""; return; }
+      state="ringing"; ds.textContent="Ringing..."; ds.className=""; dg.classList.add("end"); dg.querySelector("span").textContent="End";
+      tmr=setTimeout(function(){ state="live"; secs=0; ds.className="on"; ds.textContent="Connected 0:00"; tmr=setInterval(function(){ secs++; ds.textContent="Connected "+Math.floor(secs/60)+":"+("0"+secs%60).slice(-2); },1000); },1600);
+    } else {
+      clearTimeout(tmr); clearInterval(tmr); state="idle"; digits=""; paint(); ds.className=""; ds.textContent= secs?"Call logged":"Try it"; secs=0; dg.classList.remove("end"); dg.querySelector("span").textContent="Call";
+    }
+  });
+  // ivr
+  var ivrRes=document.getElementById("ivrres");
+  document.querySelectorAll("#ivr button").forEach(function(b){ b.addEventListener("click",function(){ document.querySelectorAll("#ivr button").forEach(function(x){ x.classList.toggle("sel",x===b); }); ivrRes.innerHTML='<span class="dot" aria-hidden="true"></span>'+esc(b.getAttribute("data-r"))+"..."; }); });
+  // progress + mobile bar
+  var prog=document.getElementById("prog"), mbar=document.getElementById("mbar"), heroEnd=document.querySelector(".stage");
+  function onS(){ var h=document.documentElement.scrollHeight-window.innerHeight; if(prog) prog.style.width=(h>0?(window.scrollY/h*100):0)+"%"; if(mbar&&heroEnd){ var st=document.getElementById("start"); var nearEnd=st&&st.getBoundingClientRect().top<window.innerHeight; mbar.classList.toggle("show", window.scrollY>heroEnd.offsetTop && !nearEnd); } }
+  window.addEventListener("scroll",onS,{passive:true}); onS();
   var y=document.getElementById("yr"); if(y) y.textContent=new Date().getFullYear();
 })();
 </script>
